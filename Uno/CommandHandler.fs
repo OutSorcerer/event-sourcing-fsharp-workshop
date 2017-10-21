@@ -33,9 +33,19 @@ open Game
 // Step 16:
 // Implement the command handler
 let handler (read: _ Read) (append: _ Append) stream command =
-    failwith "Not implemented"
-
-
+    //failwith "Not implemented"
+    async {
+        // let snapshot = getShapshot
+        // load only events after snaphot
+        let eventStream = read stream EventNumber.Start
+        let! state, version = EventStream.fold evolve InitialState eventStream
+        match decide command state with
+        | Ok events ->
+            let nextVersion = append stream version events
+            return Ok()
+        | Error e ->
+            return Error e
+    }
 
 
 
