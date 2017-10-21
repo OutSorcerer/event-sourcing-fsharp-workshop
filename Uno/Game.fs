@@ -48,6 +48,7 @@ and GameInProgress = {
 type GameError = 
      | GameAlreadyStarted
      | TooFewPlayers
+     | GameNotStarted
 
 type Decide = Command -> State -> Result<Event list, GameError>
 type Evolve = State -> Event -> State
@@ -68,6 +69,7 @@ let decide : Decide = fun command state -> // failwith "Not Implemented"
              NextPlayer = nextPlayer state.NextPlayer state.Players state.Direction;
              Card = cmd.Card 
              } ]
+        | (PlayCard cmd, InitialState) -> Result.Error GameNotStarted 
         | _ ->  failwith "Not Implemented"
 
 // Step 2:

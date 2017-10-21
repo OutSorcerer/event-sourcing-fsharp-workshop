@@ -56,10 +56,13 @@ let tests =
         == [ CardPlayed { NextPlayer=PlayerId(1); Card= Digit(Zero, Yellow) } ]
 
 
-    // // Step 8:
-    // // Make this test pass
-    // testCase "Card can be played only once game is started" <| fun _ ->
-    //     failwith "Not implemented"
+    // Step 8:
+    // Make this test pass
+    testCase "Card can be played only once game is started" <| fun _ ->
+        [ ]
+        => PlayCard { Player=PlayerId(0); Card= Digit(Zero, Yellow)  }
+        =! GameNotStarted 
+
 
     // // Step 9:
     // // What happens here ?!
