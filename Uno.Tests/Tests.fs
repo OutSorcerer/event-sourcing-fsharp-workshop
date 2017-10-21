@@ -64,11 +64,12 @@ let tests =
         =! GameNotStarted 
 
 
-    // // Step 9:
-    // // What happens here ?!
-    // testCase "Card should be same color or same value" <| fun _ ->
-    //     failwith "Not implemented"
-    //   // ...
+    // Step 9:
+    // What happens here ?!
+    testCase "Card should be same color or same value" <| fun _ ->
+        [ GameStarted { Players= PlayerCount 2; FirstCard = Digit(Nine, Yellow) } ]
+        => PlayCard { Player=PlayerId(0); Card= Digit(Eight, Red) }
+        =! CardColorAndValueDoNotMatch
 
     // // Step 10:
     // // What happens here ?!

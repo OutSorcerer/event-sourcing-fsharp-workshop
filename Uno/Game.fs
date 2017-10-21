@@ -49,6 +49,7 @@ type GameError =
      | GameAlreadyStarted
      | TooFewPlayers
      | GameNotStarted
+     | CardColorAndValueDoNotMatch
 
 type Decide = Command -> State -> Result<Event list, GameError>
 type Evolve = State -> Event -> State
@@ -60,15 +61,23 @@ type Evolve = State -> Event -> State
 let nextPlayer = fun (PlayerId x) (PlayerCount players) (Direction direction) ->
     PlayerId ((x+direction+players) % players)
 
+let cardMatch = fun card1 card2 -> 
+    match (card1, card2) with
+        | (Digit (digit1, _), Digit (digit2, _)) when digit1 = digit2 -> true
+        | (Digit (_, color1), Digit (_,color2)) when color1 = color2 -> true
+        | _ -> false
+
+
 let decide : Decide = fun command state -> // failwith "Not Implemented"
     match (command, state) with  
         | (StartGame cmd, _) when cmd.Players = PlayerCount(1) ->  Result.Error TooFewPlayers
         | (StartGame cmd, GameInProgress _) ->  Result.Error GameAlreadyStarted
         | (StartGame cmd, _) ->  Result.Ok [ GameStarted { Players = cmd.Players; FirstCard = cmd.FirstCard  }  ]
-        | (PlayCard cmd, GameInProgress state) ->  Result.Ok [ CardPlayed {
+        | (PlayCard cmd, GameInProgress state) when cardMatch state.TopCard cmd.Card ->  Result.Ok [ CardPlayed {
              NextPlayer = nextPlayer state.NextPlayer state.Players state.Direction;
              Card = cmd.Card 
              } ]
+        | (PlayCard cmd, GameInProgress _) -> Result.Error CardColorAndValueDoNotMatch
         | (PlayCard cmd, InitialState) -> Result.Error GameNotStarted 
         | _ ->  failwith "Not Implemented"
 
