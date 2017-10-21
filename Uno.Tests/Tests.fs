@@ -5,7 +5,10 @@ open Game
 
 // Step 3:
 // Implement => to make the test run
-let (=>) events command = failwith "Not implemented"
+let (=>) events command =
+   events
+   |> List.fold evolve InitialState
+   |> decide command
 
 let (==) result expected =
     Expect.equal result (Ok expected) "Should equal expected"
@@ -29,7 +32,7 @@ let tests =
     testCase "Playing alone is not fun" <| fun _ ->
       []
       => StartGame { Players = PlayerCount 1; FirstCard = Digit( Seven, Yellow)}
-      //=! TooFewPlayers
+      =! TooFewPlayers
       
 
     // Step 6:
@@ -43,50 +46,55 @@ let tests =
     // Step 7:
     // Make this two tests pass... doing the simplest thing that work
     testCase "Card with same value can be played" <| fun _ ->
-        failwith "Not implemented"
+        [ GameStarted { Players= PlayerCount 2; FirstCard = Digit(Nine, Yellow) } ]
+        => PlayCard { Player=PlayerId(0); Card= Digit(Nine, Red) }
+        == [ CardPlayed { NextPlayer=PlayerId(1); Card= Digit(Nine, Red) } ]
 
     testCase "Card with same color can be played" <| fun _ ->
-        failwith "Not implemented"
+        [ GameStarted { Players= PlayerCount 2; FirstCard = Digit(Nine, Yellow) } ]
+        => PlayCard { Player=PlayerId(0); Card= Digit(Zero, Yellow)  }
+        == [ CardPlayed { NextPlayer=PlayerId(1); Card= Digit(Zero, Yellow) } ]
 
-    // Step 8:
-    // Make this test pass
-    testCase "Card can be played only once game is started" <| fun _ ->
-        failwith "Not implemented"
 
-    // Step 9:
-    // What happens here ?!
-    testCase "Card should be same color or same value" <| fun _ ->
-        failwith "Not implemented"
-      // ...
+    // // Step 8:
+    // // Make this test pass
+    // testCase "Card can be played only once game is started" <| fun _ ->
+    //     failwith "Not implemented"
 
-    // Step 10:
-    // What happens here ?!
-    testCase "Player should play during his turn" <| fun _ ->
-        failwith "Not implemented"
+    // // Step 9:
+    // // What happens here ?!
+    // testCase "Card should be same color or same value" <| fun _ ->
+    //     failwith "Not implemented"
+    //   // ...
 
-    // Step 11:
-    // Testing a full round
-    testCase "The after a table round, the dealer plays" <| fun _ ->
-        failwith "Not implemented"
+    // // Step 10:
+    // // What happens here ?!
+    // testCase "Player should play during his turn" <| fun _ ->
+    //     failwith "Not implemented"
 
-    testCase "The after a table round, the dealer turn start" <| fun _ ->
-        failwith "Not implemented"
-    // Step 12:
-    // Look at the evolve function...
-    // It starts to contains logic.
-    // Try to remove the logic from the evolve function 
-    // to put it back in the decide function 
+    // // Step 11:
+    // // Testing a full round
+    // testCase "The after a table round, the dealer plays" <| fun _ ->
+    //     failwith "Not implemented"
 
-    // Step 13:
-    // Make this test pass
-    testCase "Player can interrupt" <| fun _ ->
-        failwith "Not implemented"
+    // testCase "The after a table round, the dealer turn start" <| fun _ ->
+    //     failwith "Not implemented"
+    // // Step 12:
+    // // Look at the evolve function...
+    // // It starts to contains logic.
+    // // Try to remove the logic from the evolve function 
+    // // to put it back in the decide function 
 
-    // Step 14:
-    // Missing an interrupt is not concidered as playing at the wrong turn.
-    // So what happens here ?
-    testCase "Player get no penalty when missing an interrupt" <| fun _ ->
-        failwith "Not implemented"
+    // // Step 13:
+    // // Make this test pass
+    // testCase "Player can interrupt" <| fun _ ->
+    //     failwith "Not implemented"
+
+    // // Step 14:
+    // // Missing an interrupt is not concidered as playing at the wrong turn.
+    // // So what happens here ?
+    // testCase "Player get no penalty when missing an interrupt" <| fun _ ->
+    //     failwith "Not implemented"
 
 
     // Step 15:

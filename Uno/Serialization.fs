@@ -88,7 +88,7 @@ module GameEvents =
                     |> serialize)
             | CardPlayed e -> 
                 struct( "CardPlayed", 
-                    { CardPlayedDto.Player = let (PlayerId p) = e.Player in p
+                    { CardPlayedDto.Player = let (PlayerId p) = e.NextPlayer in p
                       Card = toCardDto e.Card }
                     |> serialize)
             
@@ -100,7 +100,7 @@ module GameEvents =
             |> deserialize
             |> function 
                 | { CardPlayedDto.Player = Player player; Card = Card card } ->
-                    [CardPlayed { Player = player; Card = card }]
+                    [CardPlayed { NextPlayer = player; Card = card }]
                 | _ -> []
 
         | "GameStarted" -> 
